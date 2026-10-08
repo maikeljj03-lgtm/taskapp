@@ -1,0 +1,63 @@
+<ion-modal [isOpen]="abierto" (didDismiss)="alCerrar()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Nueva tarea</ion-title>
+        <ion-button slot="end" fill="clear" (click)="alCerrar()" aria-label="Cerrar formulario">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding modal-content">
+      <div class="modal-intro">
+        <p class="section-kicker">UN NUEVO PASO</p>
+        <h2>¿Qué tienes pendiente?</h2>
+        <p>Guarda los detalles y vuelve a tu lista.</p>
+      </div>
+      <form [formGroup]="formulario" (ngSubmit)="enviar()">
+        <ion-item class="form-field" lines="none">
+          <ion-input
+            label="Título"
+            labelPlacement="stacked"
+            placeholder="Ej. Estudiar para el examen"
+            formControlName="titulo"
+            maxlength="80"
+          ></ion-input>
+        </ion-item>
+        <p class="validation-message" *ngIf="formulario.controls.titulo.touched && formulario.controls.titulo.hasError('required')">
+          Escribe un título para la tarea.
+        </p>
+        <p class="validation-message" *ngIf="formulario.controls.titulo.touched && formulario.controls.titulo.hasError('minlength')">
+          El título debe tener al menos 5 caracteres.
+        </p>
+        <p class="validation-message" *ngIf="formulario.controls.titulo.touched && formulario.controls.titulo.hasError('pattern')">
+          El título no puede contener solo espacios.
+        </p>
+
+        <ion-item class="form-field" lines="none">
+          <ion-textarea
+            label="Descripción"
+            labelPlacement="stacked"
+            placeholder="Añade un detalle (opcional)"
+            formControlName="descripcion"
+            rows="3"
+            autoGrow="true"
+          ></ion-textarea>
+        </ion-item>
+
+        <ion-item class="form-field" lines="none">
+          <ion-select label="Prioridad" labelPlacement="stacked" formControlName="prioridad">
+            <ion-select-option value="Alta">Alta</ion-select-option>
+            <ion-select-option value="Media">Media</ion-select-option>
+            <ion-select-option value="Baja">Baja</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button class="save-button" expand="block" type="submit">
+          Guardar tarea
+        </ion-button>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

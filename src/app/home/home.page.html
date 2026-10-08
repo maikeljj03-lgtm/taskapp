@@ -1,0 +1,104 @@
+<ion-header class="app-header">
+  <ion-toolbar>
+    <div class="topbar">
+      <div class="brand-mark">T</div>
+      <ion-title>TaskApp</ion-title>
+      <span class="topbar-caption">ESTUDIO</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="task-content">
+  <main class="screen">
+    <section class="welcome-card">
+      <div class="welcome-copy">
+        <p class="eyebrow">TU ESPACIO DE ESTUDIO</p>
+        <h1>Un paso a la vez.</h1>
+        <p class="welcome-note">Organiza tus deberes y avanza con calma.</p>
+      </div>
+      <div class="progress-card" aria-live="polite">
+        <span class="progress-number">{{ pendientes }}</span>
+        <span class="progress-label">{{ pendientes === 1 ? 'pendiente' : 'pendientes' }}</span>
+      </div>
+      <span class="hero-orbit orbit-one"></span>
+      <span class="hero-orbit orbit-two"></span>
+    </section>
+
+    <section class="list-heading">
+      <div>
+        <p class="section-kicker">PLAN DE TRABAJO</p>
+        <h2>Mis tareas</h2>
+      </div>
+      <span class="total-chip">{{ tareas.length }} {{ tareas.length === 1 ? 'tarea' : 'tareas' }}</span>
+    </section>
+
+    <ion-list class="task-list" *ngIf="tareas.length; else listaVacia">
+      <ion-item
+        class="task-item"
+        *ngFor="let tarea of tareas"
+        lines="none"
+        [class.task-done]="tarea.completada"
+      >
+        <ion-checkbox
+          slot="start"
+          [checked]="tarea.completada"
+          [attr.aria-label]="'Marcar ' + tarea.titulo + ' como completada'"
+          (ionChange)="cambiarEstado(tarea, $event.detail.checked)"
+        ></ion-checkbox>
+        <ion-label class="ion-text-wrap task-label">
+          <h3 [class.completed]="tarea.completada">{{ tarea.titulo }}</h3>
+          <p class="task-description" *ngIf="tarea.descripcion">{{ tarea.descripcion }}</p>
+          <ion-badge class="priority-badge" [color]="colorPrioridad(tarea.prioridad)">
+            <span class="priority-dot"></span>
+            Prioridad {{ tarea.prioridad }}
+          </ion-badge>
+        </ion-label>
+        <ion-button
+          class="delete-button"
+          fill="clear"
+          color="medium"
+          slot="end"
+          [attr.aria-label]="'Eliminar ' + tarea.titulo"
+          (click)="eliminarTarea(tarea)"
+        >
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <ng-template #listaVacia>
+      <section class="empty-state">
+        <div class="empty-icon">✓</div>
+        <p class="section-kicker">TODO DESPEJADO</p>
+        <h2>Tu lista está en calma</h2>
+        <p>Añade una tarea cuando tengas algo nuevo por hacer.</p>
+      </section>
+    </ng-template>
+
+    <div class="bottom-hint" *ngIf="tareas.length">
+      <span class="hint-check">✓</span>
+      <span>Pequeños avances también cuentan.</span>
+    </div>
+  </main>
+
+  <ion-fab class="add-fab" slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button aria-label="Añadir tarea" (click)="abrirFormulario()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <app-tarea-form
+    [abierto]="formularioAbierto"
+    (tareaCreada)="guardarTarea($event)"
+    (cerrar)="cerrarFormulario()"
+  ></app-tarea-form>
+</ion-content>
+
+<ion-footer class="app-footer ion-no-border">
+  <ion-toolbar>
+    <div class="footer-inner">
+      <span class="footer-dot"></span>
+      <span>Tu progreso se guarda automáticamente</span>
+    </div>
+  </ion-toolbar>
+</ion-footer>
